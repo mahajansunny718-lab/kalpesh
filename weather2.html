@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.6s ease;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 30px 40px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      width: 340px;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      font-size: 2rem;
+    }
+
+    input {
+      padding: 10px;
+      width: 75%;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: white;
+      color: #333;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00f2fe;
+      color: white;
+    }
+
+    .weather {
+      margin-top: 20px;
+      transition: 0.4s;
+    }
+
+    .temp {
+      font-size: 3rem;
+      font-weight: 600;
+    }
+
+    .condition {
+      text-transform: capitalize;
+      margin: 5px 0;
+    }
+
+    .details {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: #ffcccc;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🌦 Weather App</h1>
+    <input type="text" id="city" placeholder="Enter city name" />
+    <br />
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div class="weather" id="weather"></div>
+    <p class="error" id="error"></p>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("city").value.trim();
+      const weatherBox = document.getElementById("weather");
+      const errorMsg = document.getElementById("error");
+
+      if (!city) {
+        errorMsg.textContent = "Please enter a city name.";
+        weatherBox.innerHTML = "";
+        return;
+      }
+
+      const apiKey = "84c4bbca69224ffdb0794448252410";
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error("City not found");
+        }
+
+        const { temp_c, feelslike_c, humidity, wind_kph, condition } = data.current;
+        const { name, country } = data.location;
+        const icon = condition.icon;
+        const text = condition.text;
+
+        weatherBox.innerHTML = `
+          <div class="temp">${temp_c}°C</div>
+          <div class="condition"><img src="https:${icon}" alt="${text}" /> ${text}</div>
+          <div class="details">
+            <p><b>${name}, ${country}</b></p>
+            <p>Feels like: ${feelslike_c}°C</p>
+            <p>Humidity: ${humidity}% | Wind: ${wind_kph} kph</p>
+          </div>
+        `;
+
+        errorMsg.textContent = "";
+
+        // Change background based on temperature
+        const body = document.body;
+        if (temp_c < 10) {
+          body.style.background = "linear-gradient(135deg, #74ABE2, #5563DE)";
+        } else if (temp_c < 25) {
+          body.style.background = "linear-gradient(135deg, #74ebd5, #ACB6E5)";
+        } else {
+          body.style.background = "linear-gradient(135deg, #f6d365, #fda085)";
+        }
+
+      } catch (error) {
+        errorMsg.textContent = "City not found. Please try again.";
+        weatherBox.innerHTML = "";
+      }
+    }
+  </script>
+</body>
+</html>

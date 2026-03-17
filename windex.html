@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Weatherly — Current Weather</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="assets/favicon.svg" />
+</head>
+<body>
+  <header class="nav">
+    <div class="logo">Weatherly</div>
+    <nav>
+      <a href="windex.html" class="active">Home</a>
+      <a href="forecast.html">Forecast</a>
+      <a href="wabout.html">About</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card" id="mainCard">
+      <h1>Current Weather</h1>
+
+      <form id="searchForm" class="row">
+        <input id="cityInput" type="text" placeholder="Enter city or postcode (e.g. London)" autocomplete="off" />
+        <button id="searchBtn" type="submit">Search</button>
+        <button id="geolocateBtn" type="button" class="muted">Use my location</button>
+      </form>
+
+      <div id="loading" class="muted small hide">Loading…</div>
+      <div id="error" class="error hide"></div>
+
+      <div id="weatherResult" class="weatherResult hide">
+        <div class="topRow">
+          <div class="left">
+            <div id="locName" class="locName"></div>
+            <div id="condition" class="condition"></div>
+            <div id="localTime" class="muted small"></div>
+          </div>
+          <div class="right">
+            <img id="icon" alt="weather icon" />
+            <div id="temp" class="temp"></div>
+          </div>
+        </div>
+
+        <div class="detailsRow">
+          <div class="detail">Feels: <span id="feels"></span></div>
+          <div class="detail">Humidity: <span id="humidity"></span></div>
+          <div class="detail">Wind: <span id="wind"></span></div>
+          <div class="detail">AQI: <span id="aqi"></span></div>
+        </div>
+
+        <div class="actions">
+          <a id="openForecast" class="btn">View 3-day forecast →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Made with ☁️ • Data from WeatherAPI
+  </footer>
+
+  <script>
+    // supply API key here (you provided earlier)
+    window.WEATHER_API_KEY = "84c4bbca69224ffdb0794448252410";
+  </script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
